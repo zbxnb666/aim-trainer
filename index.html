@@ -188,11 +188,19 @@ function sfxGo(){ tone(1100,0.25,'square',0.1); }
 function sfxHit(ms){ tone(ms<200?1400:ms<350?900:550,0.08,'sine',0.14); }
 function sfxFinish(){ tone(600,0.08,'sine',0.12); setTimeout(()=>tone(900,0.1,'sine',0.15),80); setTimeout(()=>tone(1300,0.15,'sine',0.2),160); }
 
-function calcClickScore(avgMs){ return Math.max(0, Math.round(100-(avgMs-150)/5)); }
+function calcClickScore(avgMs){
+  if(avgMs<=450) return Math.round(100 - (avgMs/450)*20);
+  if(avgMs<=550) return Math.round(80 - ((avgMs-450)/100)*20);
+  if(avgMs<=625) return Math.round(60 - ((avgMs-550)/75)*15);
+  if(avgMs<=700) return Math.round(45 - ((avgMs-625)/75)*15);
+  if(avgMs<=800) return Math.round(30 - ((avgMs-700)/100)*15);
+  if(avgMs<=1000) return Math.round(15 - ((avgMs-800)/200)*15);
+  return 0;
+}
 function calcFollowScore(tm,tc){ const maxR=tc*100; return Math.round(Math.min(Math.round(tm/100*5),maxR)/maxR*100); }
 function getGrade(s){ if(s>=80)return'强如张博翔'; if(s>=60)return'A'; if(s>=45)return'B'; if(s>=30)return'C'; if(s>=15)return'D'; return'E'; }
 function getGradeLabel(r){ const m={'强如张博翔':'🏆 强如张博翔','A':'🔥 A 级','B':'💪 B 级','C':'👍 C 级','D':'😐 D 级','E':'🐢 E 级'}; return m[r]||r; }
-function getScoreColor(s){ if(s>=60)return'var(--success)'; if(s>=30)return'var(--warning)'; return'var(--primary)'; }
+function getScoreColor(s){ if(s>=60)return'var(--success)'; if(s>=45)return'var(--warning)'; return'var(--primary)'; }
 
 function render() {
   hintEl.textContent=''; stopAnimation();
